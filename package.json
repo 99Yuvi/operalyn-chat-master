@@ -1,0 +1,15 @@
+{
+  "name": "operalyn-chat",
+  "version": "1.0.0",
+  "description": "Operalyn real-time chat server — Socket.io + Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev":   "node --watch server.js"
+  },
+  "dependencies": {
+    "axios":     "^1.7.0",
+    "dotenv":    "^16.4.0",
+    "socket.io": "^4.7.5"
+  }
+}
