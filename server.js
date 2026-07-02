@@ -1,5 +1,14 @@
 require('dotenv').config()
 
+if (!process.env.NODE_SERVICE_TOKEN) {
+  console.error('[FATAL] NODE_SERVICE_TOKEN is not set. Exiting.')
+  process.exit(1)
+}
+if (!process.env.LARAVEL_API_URL) {
+  console.error('[FATAL] LARAVEL_API_URL is not set. Exiting.')
+  process.exit(1)
+}
+
 const { createServer } = require('http')
 const { Server }       = require('socket.io')
 

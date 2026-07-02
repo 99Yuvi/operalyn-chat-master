@@ -30,4 +30,15 @@ async function persistMessage(conversationId, senderId, body, type = 'text') {
   return res.data.data
 }
 
-module.exports = { verifyToken, persistMessage }
+/** Verify that a user is a member (client or freelancer) of a conversation */
+async function verifyConversationMembership(conversationId, userId) {
+  try {
+    const res = await client.get(`/internal/conversations/${conversationId}/members`)
+    const { client_id, freelancer_id } = res.data
+    return userId === client_id || userId === freelancer_id
+  } catch {
+    return false
+  }
+}
+
+module.exports = { verifyToken, persistMessage, verifyConversationMembership }
