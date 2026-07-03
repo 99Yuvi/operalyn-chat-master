@@ -40,10 +40,10 @@ module.exports = function typingHandler(io, socket) {
   })
 
   // Clean up timers on disconnect
+  // socket.data.rooms stores raw conversationId values (numbers), not room strings
   socket.on('disconnect', () => {
     if (socket.data.rooms) {
-      socket.data.rooms.forEach((room) => {
-        const conversationId = room.replace('conversation:', '')
+      socket.data.rooms.forEach((conversationId) => {
         const key = `${socket.data.userId}:${conversationId}`
         if (typingTimers.has(key)) {
           clearTimeout(typingTimers.get(key))
