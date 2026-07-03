@@ -19,14 +19,11 @@ async function verifyToken(token) {
   return res.data
 }
 
-/** Persist a text message to the database */
-async function persistMessage(conversationId, senderId, body, type = 'text') {
-  const res = await client.post('/internal/messages', {
-    conversation_id: conversationId,
-    sender_id:       senderId,
-    body,
-    type,
-  })
+/** Persist a message (text or file) to the database */
+async function persistMessage(conversationId, senderId, { body, type = 'text', file_path, file_name, file_size }) {
+  const payload = { conversation_id: conversationId, sender_id: senderId, body, type }
+  if (file_path) { payload.file_path = file_path; payload.file_name = file_name; payload.file_size = file_size }
+  const res = await client.post('/internal/messages', payload)
   return res.data.data
 }
 
