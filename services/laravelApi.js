@@ -27,15 +27,20 @@ async function persistMessage(conversationId, senderId, { body, type = 'text', f
   return res.data.data
 }
 
+/** Get the two members of a conversation: { client_id, freelancer_id } */
+async function getConversationMembers(conversationId) {
+  const res = await client.get(`/internal/conversations/${conversationId}/members`)
+  return res.data
+}
+
 /** Verify that a user is a member (client or freelancer) of a conversation */
 async function verifyConversationMembership(conversationId, userId) {
   try {
-    const res = await client.get(`/internal/conversations/${conversationId}/members`)
-    const { client_id, freelancer_id } = res.data
+    const { client_id, freelancer_id } = await getConversationMembers(conversationId)
     return userId === client_id || userId === freelancer_id
   } catch {
     return false
   }
 }
 
-module.exports = { verifyToken, persistMessage, verifyConversationMembership }
+module.exports = { verifyToken, persistMessage, verifyConversationMembership, getConversationMembers }

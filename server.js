@@ -39,6 +39,10 @@ io.use(authMiddleware)
 io.on('connection', (socket) => {
   console.log(`[CONNECT] user=${socket.data.userId} socket=${socket.id}`)
 
+  // User-level room — lets the server notify this user about new messages
+  // even when they are not inside the conversation room (other page open)
+  socket.join(`user:${socket.data.userId}`)
+
   messageHandler(io, socket)
   presenceHandler(io, socket)
   typingHandler(io, socket)

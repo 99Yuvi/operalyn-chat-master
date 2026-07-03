@@ -1,4 +1,4 @@
-const { persistMessage } = require('../services/laravelApi')
+const { persistMessage, getConversationMembers } = require('../services/laravelApi')
 
 module.exports = function messageHandler(io, socket) {
 
@@ -25,6 +25,19 @@ module.exports = function messageHandler(io, socket) {
         ...message,
         tempId,
       })
+
+      // 3. User-level notification for the recipient — reaches them even when
+      //    they're on another page (not joined to this conversation room).
+      //    The frontend ignores it if the conversation is already open & visible.
+      try {
+        const { client_id, freelancer_id } = await getConversationMembers(conversationId)
+        const recipientId = socket.data.userId === client_id ? freelancer_id : client_id
+        if (recipientId) {
+          io.to(`user:${recipientId}`).emit('message_notification', message)
+        }
+      } catch (notifyErr) {
+        console.error('[NOTIFY] Failed:', notifyErr.message)
+      }
 
     } catch (err) {
       console.error('[MESSAGE] Persist failed:', err.message)
