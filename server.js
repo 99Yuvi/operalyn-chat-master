@@ -17,8 +17,11 @@ const messageHandler   = require('./handlers/messageHandler')
 const presenceHandler  = require('./handlers/presenceHandler')
 const typingHandler    = require('./handlers/typingHandler')
 
-const PORT        = process.env.PORT || 3001
-const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173'
+const PORT = process.env.PORT || 3001
+
+// Support comma-separated origins: "https://operalyn.com,http://localhost:5173"
+const rawOrigins = process.env.CORS_ORIGIN || 'http://localhost:5173'
+const CORS_ORIGIN = rawOrigins.split(',').map(o => o.trim())
 
 const httpServer = createServer()
 const io = new Server(httpServer, {
