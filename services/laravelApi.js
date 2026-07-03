@@ -14,7 +14,7 @@ const client = axios.create({
 async function verifyToken(token) {
   const res = await axios.get(
     `${process.env.LARAVEL_API_URL || 'http://localhost:8000/api/v1'}/auth/socket-verify`,
-    { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } }
+    { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' }, timeout: 10000 }
   )
   return res.data
 }
